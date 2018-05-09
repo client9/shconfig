@@ -1,0 +1,2 @@
+# shconfig
+configuration via functions
