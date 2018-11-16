@@ -21,6 +21,13 @@ func RequireString1(args []string, fn func(string) error) error {
 	return fn(args[1])
 }
 
+func RequireString2(args []string, fn func(string) error) error {
+	if len(args) != 3 {
+		return fmt.Errorf("%s: expected 2 args, got %d", args[0], len(args))
+	}
+	return fn(args[1], args[2])
+}
+
 type Dispatcher interface {
 	ConfCall(args []string) error
 	ConfObject(args []string) (Dispatcher, error)
