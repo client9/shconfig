@@ -21,7 +21,7 @@ func RequireString1(args []string, fn func(string) error) error {
 	return fn(args[1])
 }
 
-func RequireString2(args []string, fn func(string) error) error {
+func RequireString2(args []string, fn func(string,string) error) error {
 	if len(args) != 3 {
 		return fmt.Errorf("%s: expected 2 args, got %d", args[0], len(args))
 	}
