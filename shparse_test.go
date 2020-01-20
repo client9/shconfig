@@ -9,6 +9,7 @@ func TestParse(t *testing.T) {
 	confs := []string{
 		"foo bar",
 		"foo 123",
+		"foo 123-456",
 		"foo 123.456",
 		"foo-bar",
 		"foo; bar",

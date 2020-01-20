@@ -17,7 +17,7 @@ func NewParser(s string, name string) *parser {
 	scan.Init(strings.NewReader(s))
 	scan.Whitespace = 1<<'\t' | 1<<'\r' | 1<<' '
 	scan.IsIdentRune = func(ch rune, i int) bool {
-		return ch == '-' || ch == '.' || (i > 0 && unicode.IsDigit(ch)) || unicode.IsLetter(ch)
+		return ch == '-' || ch == '.' || (unicode.IsDigit(ch)) || unicode.IsLetter(ch)
 	}
 
 	scan.Filename = name
