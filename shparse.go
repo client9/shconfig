@@ -8,27 +8,39 @@ import (
 	"unicode"
 )
 
-type parser struct {
+type Parser struct {
 	scan *scanner.Scanner
 }
 
-func NewParser(s string, name string) *parser {
+func NewParser(s string, name string) *Parser {
 	scan := scanner.Scanner{}
 	scan.Init(strings.NewReader(s))
-	scan.Whitespace = 1<<'\t' | 1<<'\r' | 1<<' '
-	scan.IsIdentRune = func(ch rune, i int) bool {
-		return ch == '-' || ch == '.' || (unicode.IsDigit(ch)) || unicode.IsLetter(ch)
-	}
-
 	scan.Filename = name
 	scan.Mode = scanner.ScanIdents | scanner.ScanFloats | scanner.ScanChars | scanner.ScanStrings | scanner.ScanRawStrings | scanner.ScanComments | scanner.SkipComments
-
-	return &parser{
+	p := &Parser{
 		scan: &scan,
+	}
+	p.RawMode(false)
+	return p
+}
+func (p *Parser) RawMode(on bool) {
+	if on {
+		// this basically makes everything that is NOT a newline an "identifier"
+		// basically copies the line as-in
+		p.scan.Whitespace = 0
+		p.scan.IsIdentRune = func(ch rune, i int) bool { return ch != '\n' }
+		return
+	}
+
+	// white is usual stuff but not "\n" since that's end of line
+	// and what to deal with it in a different way
+	p.scan.Whitespace = 1<<'\t' | 1<<'\r' | 1<<' '
+	p.scan.IsIdentRune = func(ch rune, i int) bool {
+		return ch == '-' || ch == '.' || (unicode.IsDigit(ch)) || unicode.IsLetter(ch)
 	}
 }
 
-func (p *parser) Next() ([]string, error) {
+func (p *Parser) Next() ([]string, error) {
 	args := []string{}
 	for tok := p.scan.Scan(); tok != scanner.EOF; tok = p.scan.Scan() {
 		val := p.scan.TokenText()
@@ -40,6 +52,9 @@ func (p *parser) Next() ([]string, error) {
 			}
 			val = raw
 		}
+		if vlen > 0 && val[0] == '`' && val[vlen-1] == '`' {
+			val = val[1:vlen-1]
+		}
 		if val == ";" || val == "\n" {
 			if len(args) > 0 {
 				return args, nil
@@ -50,8 +65,11 @@ func (p *parser) Next() ([]string, error) {
 			args = append(args, val)
 			return args, nil
 		}
-		if val == "}" {
-			args = append(args, val)
+
+	    // in raw mode, the "}" could be "      }"
+		// so we need to trim
+		if strings.TrimSpace(val) == "}" {
+			args = append(args, strings.TrimSpace(val))
 			return args, nil
 		}
 		args = append(args, val)
