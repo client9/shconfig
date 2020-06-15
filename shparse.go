@@ -53,7 +53,7 @@ func (p *Parser) Next() ([]string, error) {
 			val = raw
 		}
 		if vlen > 0 && val[0] == '`' && val[vlen-1] == '`' {
-			val = val[1 : vlen-1]
+			val = val[1:vlen-1]
 		}
 		if val == ";" || val == "\n" {
 			if len(args) > 0 {

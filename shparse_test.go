@@ -4,13 +4,21 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"reflect"
 )
 
 func TestParse(t *testing.T) {
+<<<<<<< HEAD
 	confs := []struct {
 		name string
 		in   string
 		out  []string
+=======
+	confs := []struct{
+		name string
+		in string
+		out []string
+>>>>>>> f0c03c8... support string multi-line litterals
 	}{
 		{"normal", "foo bar", []string{"foo", "bar"}},
 		{"int", "foo 123", []string{"foo", "123"}},
@@ -20,7 +28,11 @@ func TestParse(t *testing.T) {
 		{"semi-colon", "foo; bar", []string{"foo"}},
 		{"quoted", "foo \"bar\"", []string{"foo", "bar"}},
 		{"quoted2", `foo "bar"`, []string{"foo", "bar"}},
+<<<<<<< HEAD
 		{"quoted-with-newline", `foo "b\nar"`, []string{"foo", "b\nar"}},
+=======
+		{"quoted-with-newline", `foo "b\nar"`, []string{ "foo", "b\nar" }},
+>>>>>>> f0c03c8... support string multi-line litterals
 		{"quoted-with-hex", `foo "b\x32ar"`, []string{"foo", "b\x32ar"}},
 		{"compound", "foo bar; hello world", []string{"foo", "bar"}},
 		{"scope", "foo { hello world; }", []string{"foo", "{"}},
@@ -42,7 +54,11 @@ func TestParse(t *testing.T) {
 			if args == nil {
 				break
 			}
+<<<<<<< HEAD
 			if !reflect.DeepEqual(args, c.out) {
+=======
+			if ! reflect.DeepEqual(args, c.out) {
+>>>>>>> f0c03c8... support string multi-line litterals
 				t.Errorf("Case %d %s: Expected %v got %v", i, c.name, c.out, args)
 			}
 			break
