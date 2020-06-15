@@ -45,7 +45,7 @@ func Parse(root Dispatcher, conf string) error {
 			args = args[:len(args)-1]
 			d, err := stack[len(stack)-1].ConfObject(args)
 			if err != nil {
-				return fmt.Errorf("%s: config err %s", "TODO", err)
+				return fmt.Errorf("%s: scope err %s", args[0], err)
 			}
 			stack = append(stack, d)
 			continue
@@ -59,7 +59,7 @@ func Parse(root Dispatcher, conf string) error {
 		}
 		err = stack[len(stack)-1].ConfCall(args)
 		if err != nil {
-			return fmt.Errorf("%s config err %s", "TODO", err)
+			return fmt.Errorf("%s call err %s", args[0], err)
 		}
 	}
 
