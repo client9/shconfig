@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"text/scanner"
-	"unicode"
 )
 
 type Parser struct {
@@ -36,7 +35,13 @@ func (p *Parser) RawMode(on bool) {
 	// and what to deal with it in a different way
 	p.scan.Whitespace = 1<<'\t' | 1<<'\r' | 1<<' '
 	p.scan.IsIdentRune = func(ch rune, i int) bool {
-		return ch == '-' || ch == '.' || (unicode.IsDigit(ch)) || unicode.IsLetter(ch)
+		if ch < 33 {
+			return false
+		}
+
+		// cannot be another special token for whitespace
+		// or string quoting. (otherwise infinite loops)
+		return !(ch == ' ' || ch == '"' || ch == '`')
 	}
 }
 
@@ -53,7 +58,7 @@ func (p *Parser) Next() ([]string, error) {
 			val = raw
 		}
 		if vlen > 0 && val[0] == '`' && val[vlen-1] == '`' {
-			val = val[1:vlen-1]
+			val = val[1 : vlen-1]
 		}
 		if val == ";" || val == "\n" {
 			if len(args) > 0 {
