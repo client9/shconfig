@@ -53,7 +53,7 @@ func (p *Parser) Next() ([]string, error) {
 			val = raw
 		}
 		if vlen > 0 && val[0] == '`' && val[vlen-1] == '`' {
-			val = val[1:vlen-1]
+			val = val[1 : vlen-1]
 		}
 		if val == ";" || val == "\n" {
 			if len(args) > 0 {
@@ -66,7 +66,7 @@ func (p *Parser) Next() ([]string, error) {
 			return args, nil
 		}
 
-	    // in raw mode, the "}" could be "      }"
+		// in raw mode, the "}" could be "      }"
 		// so we need to trim
 		if strings.TrimSpace(val) == "}" {
 			args = append(args, strings.TrimSpace(val))

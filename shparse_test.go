@@ -2,15 +2,15 @@ package shconfig
 
 import (
 	"fmt"
-	"testing"
 	"reflect"
+	"testing"
 )
 
 func TestParse(t *testing.T) {
-	confs := []struct{
+	confs := []struct {
 		name string
-		in string
-		out []string
+		in   string
+		out  []string
 	}{
 		{"normal", "foo bar", []string{"foo", "bar"}},
 		{"int", "foo 123", []string{"foo", "123"}},
@@ -20,7 +20,7 @@ func TestParse(t *testing.T) {
 		{"semi-colon", "foo; bar", []string{"foo"}},
 		{"quoted", "foo \"bar\"", []string{"foo", "bar"}},
 		{"quoted2", `foo "bar"`, []string{"foo", "bar"}},
-		{"quoted-with-newline", `foo "b\nar"`, []string{ "foo", "b\nar" }},
+		{"quoted-with-newline", `foo "b\nar"`, []string{"foo", "b\nar"}},
 		{"quoted-with-hex", `foo "b\x32ar"`, []string{"foo", "b\x32ar"}},
 		{"compound", "foo bar; hello world", []string{"foo", "bar"}},
 		{"scope", "foo { hello world; }", []string{"foo", "{"}},
@@ -42,7 +42,7 @@ func TestParse(t *testing.T) {
 			if args == nil {
 				break
 			}
-			if ! reflect.DeepEqual(args, c.out) {
+			if !reflect.DeepEqual(args, c.out) {
 				t.Errorf("Case %d %s: Expected %v got %v", i, c.name, c.out, args)
 			}
 			break
